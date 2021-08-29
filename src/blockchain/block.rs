@@ -1,47 +1,40 @@
 use std::time::Duration;
-use std::marker::Copy;
+use std::boxed::Box;
 
-#[derive(Debug, Copy, Clone)]
-pub struct Block<'h> {
-
+#[derive(Debug, Clone)]
+pub struct Block {
     data: Option<i32>,
 
     transaction_date: std::time::Duration,
 
-    previous_block_hash: Option<&'h String>,
-
-    next_block: Option<&'h Block<'h>>
+    previous_block_hash: Option<String>,
 
 }
 
-impl<'h> Block<'h> {
-
-    pub fn new () -> Self {
+impl  Block {
+    pub fn new() -> Self {
         return Block {
             data: None,
             transaction_date: std::time::Instant::now().elapsed(),
             previous_block_hash: None,
-            next_block: None
-        }
+        };
     }
 
-    pub fn set_data(mut self, data: i32) -> () {
-        self.data = Some(data)
+    pub fn set_data(&mut self, data: i32) -> () {
+        self.data = Some(data);
     }
-    
     pub fn set_transaction_date(mut self, date: std::time::Duration) -> () {
         self.transaction_date = date;
     }
 
-    pub fn set_next_block(mut self, block: &'h Block) -> () {
-        self.next_block = Some(block);
+    pub fn set_previous_hash(&mut self, hash: Option<String>) -> () {
+        self.previous_block_hash = hash;
     }
 
     pub fn get_data(&self) -> &Option<i32> {
-        return &self.data
+        return &self.data;
     }
-    
-    pub fn get_previous_block_hash(&self) -> &Option<&String> {
+    pub fn get_previous_block_hash(&self) -> &Option<String> {
         return &self.previous_block_hash;
     }
 
@@ -49,5 +42,7 @@ impl<'h> Block<'h> {
         return &self.transaction_date;
     }
 
+    pub fn get_hash(&self) ->Option<String> {
+        return Some(String::from("hash"));
+    }
 }
-
