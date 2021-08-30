@@ -70,10 +70,10 @@ impl  Block {
 
     
     pub fn calculate_hash(block:&Block) -> Result<String, BlockError> {
+        
         let json = block.to_json()?;
         let hash = blake3::hash(json.as_bytes());
 
         return Ok(hash.to_string());
-
     }
 }

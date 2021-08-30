@@ -32,12 +32,16 @@ impl BlockChain {
 
     pub fn append_block(&mut self, mut block: Block) -> Result<(), BlockError> {
 
-        let last_block = self.get_last_block();
+        let possible_last_block = self.get_last_block();
 
-        if last_block.is_none() {
+        if possible_last_block.is_none() {
             self.link.push(block);
         } else {
-            let hash = last_block.unwrap().get_hash()?;
+
+            let last_block = possible_last_block.unwrap();
+        
+            let hash = last_block.get_hash()?;
+            
             block.set_previous_hash(Some(hash));   
             self.link.push(block);
         }
