@@ -1,8 +1,7 @@
-// use std::marker::Copy;
 use std::convert::TryInto;
 
 use super::block::Block;
-use super::utils::BlockError;
+use super::super::utils::{Error, ErrorLevel};
 
 #[derive(Debug, Clone)]
 pub struct BlockChain {
@@ -12,7 +11,6 @@ pub struct BlockChain {
 impl BlockChain {
 
     pub fn new() -> Self {
-
          return BlockChain {
             link: vec![],
         };
@@ -30,7 +28,7 @@ impl BlockChain {
         return self.link.len().try_into().unwrap();
     }
 
-    pub fn append_block(&mut self, mut block: Block) -> Result<(), BlockError> {
+    pub fn append_block(&mut self, mut block: Block) -> Result<(), Error> {
 
         let possible_last_block = self.get_last_block();
 
@@ -41,7 +39,7 @@ impl BlockChain {
             let last_block = possible_last_block.unwrap();
         
             let hash = last_block.get_hash()?;
-            
+
             block.set_previous_hash(Some(hash));   
             self.link.push(block);
         }
@@ -53,7 +51,7 @@ impl BlockChain {
         return self.link.get(index);
     }
 
-    pub fn validate_chain(&self) -> Result<bool, BlockError> {
+    pub fn validate_chain(&self) -> Result<bool, Error> {
 
         let is_valid = true;
 
@@ -73,9 +71,14 @@ impl BlockChain {
             let previous_block_hash = self.get_block_by_index(0)
                 .map(|block| block.get_hash()).unwrap()?;
 
-                if current_block_hash_previous_hash.unwrap() != previous_block_hash {
-                    return Ok(false);
+                if current_block_hash_previous_hash.is_some() {
+
+                    if current_block_hash_previous_hash.unwrap() != previous_block_hash {
+                        return Ok(false);
+                    }
+
                 }
+
             
             last_index -= 1;
         }
