@@ -5,24 +5,24 @@ pub enum ErrorLevel {
 }
 
 #[derive(Debug, Clone)]
-pub struct BlockError  {
+pub struct Error  {
 
     message: String,
 
     error_level: ErrorLevel
 }
 
-impl BlockError {
+impl Error {
 
     pub fn from_message(message: String) -> Self {
-        BlockError {
+        Error {
             message,
             error_level: ErrorLevel::Internal
         }
     } 
 
     pub fn from_message_and_error(message: String, error_level: ErrorLevel) -> Self {
-        BlockError {
+        Error {
             message,
             error_level
         }
